@@ -1,4 +1,3 @@
-
 #Mahjong Matchmaking Toolkit
 
 Mahjong Matchmaking Toolkit (MMT) is a set of functions for manipulating player data and seating players based on their past game history. This toolkit can be used to retrieve useful subsets of game data from an external database, as well as to seat players according to a variety of matchmaking techniques.
@@ -14,6 +13,12 @@ Here are a few things you may want to do that MMT can help with:
 * [Numpy 1.9.2](http://www.scipy.org/scipylib/download.html)
 * [Pandas 0.16.2](http://pypi.python.org/pypi/pandas/0.16.2/#downloads)
 
+## Navigation
+- [1. Data Inputs](#)
+	- [1.1 Game data](#)
+	- [1.2 Players](#)
+- [2. Function Overview](#)
+- [3. Function details](#)
 
 ##1. Data Inputs
 ####1.1 Game data
@@ -113,7 +118,7 @@ Functions in this package require player inputs as a Python list of each `Player
 
 * Returns `entrylist` with two random elements swapped.
 
-##3. Function details
+##3. Function Details
 ###`get_player_data(input_data, players_list)`
     
 Returns a [DataFrame](http://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.html) object containing only the rows of `input_data` with players in `players_list`.
