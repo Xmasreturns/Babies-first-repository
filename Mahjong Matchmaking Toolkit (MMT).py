@@ -16,8 +16,8 @@ def main():
     #output_tables = match_by_rating(table_counts, matchups_df)
     #print output_tables
 
+# Reduce input_data to only the rows relevant to today's players
 def get_player_data(input_data, players_list):
-    # Reduce input_data to only the rows relevant to today's players
     games_rows = pd.DataFrame()
     for i in players_list:
         games_rows = games_rows.append(input_data.loc[(input_data['PlayerId'] == i)])
@@ -29,6 +29,7 @@ def get_playerid_games(input_data, PlayerId):
     listofgames = grouped_by_player.get_group(PlayerId)
     return listofgames
 
+# Returns players split into groups based on table_counts
 def get_split_tables(table_counts, players_list):
     tables_4p_made = 0
     tables_5p_made = 0
@@ -54,8 +55,8 @@ def get_split_tables(table_counts, players_list):
         
     return split_tables
 
+# Determine amount of 5 person tables
 def get_table_counts(players_list):
-    # Determine amount of 5 person tables
     if len(players_list) < 8:
         total_tables = 1
         if len(players_list) == 4:
@@ -78,14 +79,15 @@ def get_table_counts(players_list):
     
     return table_counts
 
+# Create a zeros DataFrame of (#players,#players) size for matchups, with ordered indices.
 def create_pairings_table(players_list):
-    # Create a zeros DataFrame of (#players,#players) size for matchups, with ordered indices.
     num_players = len(players_list)
     pairings_df = DataFrame(np.zeros(num_players**2).reshape(num_players,num_players))
     pairings_df.index = sorted(players_list)
     pairings_df.columns = sorted(players_list)
     return pairings_df
 
+# Populate matchups table using frequency of play
 def create_freq_matchups(pairings_df, input_data):
     # Grab today's players and initialize output df
     players_list = pairings_df.columns
@@ -109,6 +111,7 @@ def create_freq_matchups(pairings_df, input_data):
     # Diagonal values are total # of games played for that player
     return matchups_df  
 
+# Populate matchups table based on scoring history
 def create_score_matchups(pairings_df, input_data):
     players_list = pairings_df.columns
     games_rows = get_player_data(input_data, players_list)
@@ -227,6 +230,7 @@ def playerstats(input_data, players_list):
     
     return results
 
+# Calculate a matchmaking score for a given table of players
 def sum_ratings(table_players, matchups_df):
     table_sum = 0
     for i in table_players:
