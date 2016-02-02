@@ -14,14 +14,14 @@ Here are a few things you may want to do that MMT can help with:
 * [Pandas 0.16.2](http://pypi.python.org/pypi/pandas/0.16.2/#downloads)
 
 ## Navigation
-- [1. Data Inputs](#)
-	- [1.1 Game data](#)
-	- [1.2 Players](#)
-- [2. Function Overview](#)
-- [3. Function details](#)
+- [1. Data Inputs](#1.-Data-Inputs)
+	- [1.1 Game Data](#1.1-Game-Data)
+	- [1.2 Players](#1.2-Players)
+- [2. Function Overview](#2.-Function-Overview)
+- [3. Function Details](#3.-Function-Details)
 
 ##1. Data Inputs
-####1.1 Game data
+####1.1 Game Data
 Functions in this package require play data in **`.csv`** format with headers that include **`'GameId'`**, **`'PlayerId'`**, **`'Rank'`**, and **`'Score'`**. Additional requirements are as follows:
 
 * Each column must contain only a single datatype
