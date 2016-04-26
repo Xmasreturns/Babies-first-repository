@@ -30,7 +30,7 @@ Functions in this package currently require play data in **`.csv`** format with 
 * All values in the **`PlayerId`** and **`GameId`** columns must be integers, strings, or tuples
 * All values in the **`Rank`** and **`Score`** columns must be integers
 
-For example, the following is a pandas [DataFrame](http://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.html) object converted from `Example_Data.csv`. It contains **improperly formatted** information for 2 games played - one on April 6th and another on April 12th:
+For example, the following is a pandas [DataFrame](http://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.html) object converted from **`Example_Data.csv`**. It contains **improperly formatted** information for 2 games played - one on April 6th and another on April 12th:
 
     >>> df = pandas.read_csv('Example_Data.csv')
     >>> print df
@@ -47,7 +47,7 @@ Round & Date | Rank | Player Name | Score
 (1, 2010-04-12) | 1 | DMX | 40
 (1, 2010-04-12) | 4 | Leela J. | 9
 
-Note how the above table has no `GameId` or `PlayerId` column. As the table already meets all the other requirements, fixing the formatting only requires renaming the `Round & Date` and `Player Name` columns to `GameId` and `PlayerId`: 
+Note how the above table has no **`GameId`** or **`PlayerId`** column. As the table already meets all the other requirements, fixing the formatting only requires renaming the **`Round & Date`** and **`Player Name`** columns to **`GameId`** and **`PlayerId`**: 
 
 ```
 >>> df.rename(columns={'Round & Date': 'GameId', 'Player Name': 'PlayerId'}, inplace=True)
@@ -69,7 +69,7 @@ GameId | Rank | PlayerId | Score
 After applying the corrections, the above table is now **properly** formatted.
 
 ####1.2 Players
-Many functions in MMT take a Python list of players as input. To create this list, simply include all relevant players using their respective `PlayerId` values from the input data; order does not matter. For example, all of the following are valid inputs for a group of 9 players:
+Many functions in MMT take a Python list of players as input. To create this list, simply include all relevant players using their respective **`PlayerId`** values from the input data; order does not matter. For example, all of the following are valid inputs for a group of 9 players:
 
     >>> players_list = [5, 1, 2, 4, 8, 7, 6, 3, 9]
     >>> players_list = ['John', 'Ted', 'Joy', 'Ted F.', 'Terry', 'Peter Jackson', 'DMX', 'TanYe West', 'Brunhilda']
@@ -79,15 +79,15 @@ Many functions in MMT take a Python list of players as input. To create this lis
 
 [`get_player_data(input_data, players_list)`](#get_player_data%28input_data,-players_list%29)
 
-* Returns a [DataFrame](http://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.html) object containing only the rows of `input_data` with players in `players_list`.
+* Returns a [DataFrame](http://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.html) object containing only the rows of **`input_data`** with players in **`players_list`**.
 
 [`get_playerid_games(input_data, PlayerId)`](#get_playerid_games%input_data,-PlayerId%29)
 
-* Returns a [DataFrame](http://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.html) object containing only the rows of `input_data` with the player corresponding to `PlayerId`.
+* Returns a [DataFrame](http://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.html) object containing only the rows of **`input_data`** with the player corresponding to **`PlayerId`**.
 
 [`get_split_tables(table_counts, players_list)`](#get_split_tables%28table_counts,-players_list%29)
 
-* Returns `players_list` split into smaller lists, based on the required table sizes from `table_counts`.
+* Returns **`players_list`** split into smaller lists, based on the required table sizes from **`table_counts`**.
 
 [`get_table_counts(players_list)`](#get_table_counts%28players_list%29)
 
@@ -95,23 +95,23 @@ Many functions in MMT take a Python list of players as input. To create this lis
 
 [`create_pairings_table(players_list)`](#create_pairings_table%28players_list%29)
 
-* Returns a sorted [DataFrame](http://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.html) object with each `PlayerId` in `players_list` as both row and column labels. All values in the DataFrame are set to zero.
+* Returns a sorted [DataFrame](http://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.html) object with each **`PlayerId`** in **`players_list`** as both row and column labels. All values in the DataFrame are set to zero.
 
 [`create_freq_matchups(pairings_df, input_data)`](#create_freq_matchups%28pairings_df,-input_data%29)
 
-* Returns a sorted [DataFrame](http://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.html) object with each `PlayerId` in `players_list` as both row and column labels. All values in the DataFrame are calculated as the total number of times players of corresponding indices have played against each other.
+* Returns a sorted [DataFrame](http://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.html) object with each **`PlayerId`** in **`players_list`** as both row and column labels. All values in the DataFrame are calculated as the total number of times players of corresponding indices have played against each other.
 
 [`create_score_matchups(pairings_df, input_data)`](#create_score_matchups%28pairings_df,-input_data%29)
 
-* Returns a sorted [DataFrame](http://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.html) object with each `PlayerId` in `players_list` as both row and column labels. All values in the DataFrame are the calculated average score of the player of the corresponding row when having played against the player of the corresponding column.
+* Returns a sorted [DataFrame](http://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.html) object with each **`PlayerId`** in **`players_list`** as both row and column labels. All values in the DataFrame are the calculated average score of the player of the corresponding row when having played against the player of the corresponding column.
 
 [`match_by_rating(table_counts, matchups_df)`](#match_by_rating%28table_counts,-matchups_df%29)
 
-* Returns a list of lists. Each inner list represents a table and corresponds to a group of `PlayerId` values.
+* Returns a list of lists. Each inner list represents a table and corresponds to a group of **`PlayerId`** values.
 
 [`playerstats(input_data, players_list)`](#playerstats%28input_data,-players_list%29)
 
-* Returns a [DataFrame](http://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.html) object containing aggregate data for each player in `players_list`.
+* Returns a [DataFrame](http://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.html) object containing aggregate data for each player in **`players_list`**.
 
 [`sum_ratings(table_players, matchups_df)`](#sum_ratings%28table_players,-matchups_df%29)
 
@@ -119,11 +119,11 @@ Many functions in MMT take a Python list of players as input. To create this lis
 
 [`swap_two(entrylist)`](#swap_two%28entrylist%29)
 
-* Returns `entrylist` with two random elements swapped.
+* Returns **`entrylist`** with two random elements swapped.
 
 ##3. Function Details
 ###`get_player_data(input_data, players_list)`
-Returns a [DataFrame](http://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.html) object containing only the rows of `input_data` with players in `players_list`.
+Returns a [DataFrame](http://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.html) object containing only the rows of **`input_data`** with players in **`players_list`**.
 
 #####Parameters:
 >`input_data`: *DataFrame*
@@ -137,7 +137,7 @@ Returns a [DataFrame](http://pandas.pydata.org/pandas-docs/stable/generated/pand
 * Result will be a new DataFrame object having the same columns as `input_data` and excluding all rows not containing `PlayerId` elements of `players_list`.
 
 ###`get_playerid_games(input_data, PlayerId)`
-Returns a [DataFrame](http://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.html) object containing only the rows of `input_data` with the player corresponding to `PlayerId`.
+Returns a [DataFrame](http://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.html) object containing only the rows of **`input_data`** with the player corresponding to **`PlayerId`**.
 
 #####Parameters:
 >`input_data`: *DataFrame*
@@ -151,7 +151,7 @@ Returns a [DataFrame](http://pandas.pydata.org/pandas-docs/stable/generated/pand
 * Result will be a new DataFrame object having the same columns as `input_data` and excluding all rows not containing `PlayerId` elements of `players_list`.
 
 ###`get_split_tables(table_counts, players_list)`
-Returns `players_list` split into smaller lists, based on the required table sizes from `table_counts`.
+Returns **`players_list`** split into smaller lists, based on the required table sizes from **`table_counts`**.
 
 #####Parameters:
 >`table_counts`: *list of integers*
@@ -187,7 +187,7 @@ Returns a list of integers in the order: total # tables, # of 4 player tables, #
     [3, 2, 1]
 
 ###`create_pairings_table(players_list)`
-Returns a sorted [DataFrame](http://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.html) object with each `PlayerId` in `players_list` as both row and column labels. All values in the DataFrame are set to zero.
+Returns a sorted [DataFrame](http://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.html) object with each **`PlayerId`** in **`players_list`** as both row and column labels. All values in the DataFrame are set to zero.
 
 #####Parameters:
 >`players_list`: *list*
@@ -209,7 +209,7 @@ Returns a sorted [DataFrame](http://pandas.pydata.org/pandas-docs/stable/generat
 **Mary** | 0 | 0 | 0
 
 ###`create_freq_matchups(pairings_df, input_data)`
-Returns a sorted [DataFrame](http://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.html) object with each `PlayerId` in `players_list` as both row and column labels. All values in the DataFrame are calculated as the total number of times players of corresponding indices have played against each other.
+Returns a sorted [DataFrame](http://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.html) object with each **`PlayerId`** in **`players_list`** as both row and column labels. All values in the DataFrame are calculated as the total number of times players of corresponding indices have played against each other.
 
 #####Parameters:
 >`pairings_df`: *DataFrame*
@@ -223,7 +223,7 @@ Returns a sorted [DataFrame](http://pandas.pydata.org/pandas-docs/stable/generat
 * Column and row indices will be sorted in ascending order. Values on the diagonal are equal to the number of games played by the player with that row and column label. Values are symmetric across the diagonal.
 
 ###`create_score_matchups(pairings_df, input_data)`
-Returns a sorted [DataFrame](http://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.html) object with each `PlayerId` in `players_list` as both row and column labels. All values in the DataFrame are the calculated average score of the player of the corresponding row when having played against the player of the corresponding column.
+Returns a sorted [DataFrame](http://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.html) object with each **`PlayerId`** in **`players_list`** as both row and column labels. All values in the DataFrame are the calculated average score of the player of the corresponding row when having played against the player of the corresponding column.
 
 #####Parameters:
 >`pairings_df`: *DataFrame*
@@ -237,7 +237,7 @@ Returns a sorted [DataFrame](http://pandas.pydata.org/pandas-docs/stable/generat
 * Column and row indices will be sorted in ascending order. Values on the diagonal are equal to the average score of the player with that row and column label. Values will **not** be symmetric across the diagonal. All values in the DataFrame are the average score of the player of the corresponding row when having played against the player of the corresponding column.
 
 ###`match_by_rating(table_counts, matchups_df)`
-Returns a list of lists. Each inner list represents a table and corresponds to a group of `PlayerId` values.
+Returns a list of lists. Each inner list represents a table and corresponds to a group of **`PlayerId`** values.
 
 #####Parameters:
 >`table_counts`: *list of integers*
@@ -255,7 +255,7 @@ Returns a list of lists. Each inner list represents a table and corresponds to a
 
 
 ###`playerstats(input_data, players_list)`
-Returns a [DataFrame](http://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.html) object containing aggregate data for each player in `players_list`.
+Returns a [DataFrame](http://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.html) object containing aggregate data for each player in **`players_list`**.
 
 #####Parameters:
 >`input_data`: *DataFrame*
@@ -287,7 +287,7 @@ Returns an integer value equal to the sum of matchmaking ratings for all players
 * Sum aggregate of all matchmaking ratings for each player at the table with each other player as their opponent.
 
 ###`swap_two(entrylist)`
-Returns `entrylist` with two random elements swapped.
+Returns **`entrylist`** with two random elements swapped.
 
 #####Parameters:
 >`entrylist`: *list*
