@@ -1,8 +1,8 @@
 #Mahjong Matchmaking Toolkit
 
-Mahjong Matchmaking Toolkit (MMT) is a set of functions for manipulating player data and seating players based on game history. This toolkit can be used to easily visualize subsets of historical game data and seat players based on user-defined matchmaking techniques.
+Mahjong Matchmaking Toolkit (MMT) is a set of functions for manipulating player data and seating players based on game history.
 
-Here are some slightly more complicated things that MMT can simplify:
+Use MMT to:
 * Determine matchmaking ratings for players in a group based on win rates
 * Predict the score of each player at a table based on past performance against each other player
 * Automate player seating while matching players with opponents they haven't played recently
@@ -15,22 +15,22 @@ Here are some slightly more complicated things that MMT can simplify:
 * [Pandas 0.16.2](http://pypi.python.org/pypi/pandas/0.16.2/#downloads)
 
 ## Navigation
-- [1. Data Inputs](#1.-data-inputs)
-	- [1.1 Game Data](#1.1-game-data)
-	- [1.2 Players](#1.2-players)
-- [2. Function Overview](#2.-function-overview)
-- [3. Function Details](#3.-function-details)
+* [1. Data Inputs](#1.-data-inputs)
+	* [1.1 Game Data](#1.1-game-data)
+	* [1.2 Players](#1.2-players)
+* [2. Function Overview](#2.-function-overview)
+* [3. Function Details](#3.-function-details)
 
 ##1. Data Inputs
 ####1.1 Game Data
-Functions in this package currently require play data in **`.csv`** format with entry headers that include **`GameId`**, **`PlayerId`**, **`Rank`**, and **`Score`**. Additional requirements are as follows:
+Functions in this package require play data in **`.csv`** format. Entry headers must include **`GameId`**, **`PlayerId`**, **`Rank`**, and **`Score`**. Additional requirements are as follows:
 
 * Each column must contain only a single datatype
 * Each **`GameId`** value must correspond only to 4 or 5 rows, reflecting the number of people playing in that game.
 * All values in the **`PlayerId`** and **`GameId`** columns must be integers, strings, or tuples
 * All values in the **`Rank`** and **`Score`** columns must be integers
 
-For example, the following is a pandas [DataFrame](http://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.html) object converted from **`Example_Data.csv`**. It contains **improperly formatted** information for 2 games played - one on April 6th and another on April 12th:
+The following example is a pandas [DataFrame](http://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.html) object converted from **`Example_Data.csv`**. It contains **improperly formatted** information for 2 games played - one on April 6th and another on April 12th:
 
     >>> df = pandas.read_csv('Example_Data.csv')
     >>> print df
@@ -47,7 +47,7 @@ Round & Date | Rank | Player Name | Score
 (1, 2010-04-12) | 1 | DMX | 40
 (1, 2010-04-12) | 4 | Leela J. | 9
 
-Note how the above table has no **`GameId`** or **`PlayerId`** column. As the table already meets all the other requirements, fixing the formatting only requires renaming the **`Round & Date`** and **`Player Name`** columns to **`GameId`** and **`PlayerId`**: 
+Note how the above table does not include the entry headers **`GameId`** and **`PlayerId`**. To fix this issue, simply rename the **`Round & Date`** and **`Player Name`** columns:
 
 ```
 >>> df.rename(columns={'Round & Date': 'GameId', 'Player Name': 'PlayerId'}, inplace=True)
@@ -66,14 +66,16 @@ GameId | Rank | PlayerId | Score
 (1, 2010-04-12) | 1 | DMX | 40
 (1, 2010-04-12) | 4 | Leela J. | 9
 
-After applying the corrections, the above table is now **properly** formatted.
+The above table is now **properly** formatted.
 
 ####1.2 Players
-Many functions in MMT take a Python list of players as input. To create this list, simply include all relevant players using their respective **`PlayerId`** values from the input data; order does not matter. For example, all of the following are valid inputs for a group of 9 players:
+Whenever a function requires a list of players, use **`PlayerId`** values from the input data. All of the following are valid inputs for a group of 9 players:
 
     >>> players_list = [5, 1, 2, 4, 8, 7, 6, 3, 9]
     >>> players_list = ['John', 'Ted', 'Joy', 'Ted F.', 'Terry', 'Peter Jackson', 'DMX', 'TanYe West', 'Brunhilda']
     >>> players_list = [(1,1),(1,2),(1,3),(1,4),(5,1),(6,1),(7,1),(8,3),(9,4)]
+
+Note that order **does not** matter.
 
 ##2. Function Overview
 
@@ -91,7 +93,7 @@ Many functions in MMT take a Python list of players as input. To create this lis
 
 [`get_table_counts(players_list)`](#get_table_counts%28players_list%29)
 
-* Returns a list of integers in the order: total # tables, # of 4 player tables, # of 5 player tables.
+* Returns a list of integers in the order: total tables, # of 4 player tables, # of 5 player tables.
 
 [`create_pairings_table(players_list)`](#create_pairings_table%28players_list%29)
 
@@ -171,7 +173,7 @@ Returns **`players_list`** split into smaller lists, based on the required table
     [[1, 2, 3, 4], [5, 6, 7, 8, 9]]
 
 ###`get_table_counts(players_list)`
-Returns a list of integers in the order: total # tables, # of 4 player tables, # of 5 player tables.
+Returns a list of integers in the order: total tables, # of 4 player tables, # of 5 player tables.
 
 #####Parameters:
 >`players_list`: *list*
