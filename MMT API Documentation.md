@@ -9,10 +9,10 @@ Use MMT to:
 * Seat players against opponents of similar skill level based on user-defined criteria
 * Construct graphs of an individual's performance over time
 
-#####Note: This library uses the following release versions:
-* [Python 2.7.2](https://www.python.org/download/releases/2.7.2/)
-* [Numpy 1.9.2](http://www.scipy.org/scipylib/download.html)
-* [Pandas 0.16.2](http://pypi.python.org/pypi/pandas/0.16.2/#downloads)
+#####Note: The following release versions are used:
+* [Python 3.4.4](https://www.python.org/download/releases/3.4.4/)
+* [Numpy 1.11.0](http://www.scipy.org/scipylib/download.html)
+* [Pandas 0.18.1](https://pypi.python.org/pypi/pandas)
 
 ## Navigation
 * [1. Data Inputs](#1.-data-inputs)
