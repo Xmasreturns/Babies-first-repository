@@ -3,19 +3,6 @@ import pandas as pd
 from pandas import Series, DataFrame
 import random
 
-def main():
-    players_list = [40,6,23,26,15,98,1,10,55,16,
-                      56,97,96,12,13,41,52,88,66,94,
-                      89,86,87,77,79,72,76]
-    input_data = pd.read_csv('MahjongScores.csv')
-
-    pairings_df = create_pairings_table(players_list)
-    matchups_df = create_freq_matchups(pairings_df, input_data)
-    table_counts = get_table_counts(players_list)
-     
-    #output_tables = match_by_rating(table_counts, matchups_df)
-    #print output_tables
-
 # Reduce input_data to only the rows relevant to today's players
 def get_player_data(input_data, players_list):
     games_rows = pd.DataFrame()
