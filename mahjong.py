@@ -75,6 +75,7 @@ def create_pairings_df(player_list):
     return pairings_df
 
 # Populate matchups table using frequency of play
+def get_freq_mmr(pairings_df, input_data):
     # Grab today's players and initialize output df
     player_list = pairings_df.columns
     matchups_df = pairings_df.copy()
@@ -98,6 +99,7 @@ def create_pairings_df(player_list):
     return matchups_df  
 
 # Populate matchups table based on scoring history
+def get_score_mmr(pairings_df, input_data):
     player_list = pairings_df.columns
     games_rows = get_player_data(input_data, player_list)
     matchups_df = pairings_df.copy()
@@ -122,6 +124,7 @@ def create_pairings_df(player_list):
                 else:
                     matchups_df.at[gameid_players[i],gameid_players[j]] += gameid_scores[i] # Add score of i to matchup sum
     
+    freq_df = get_freq_mmr(pairings_df, input_data)
     for i in range( len(player_list)):
         for j in range( len(player_list)):
             matchups_df.iat[i,j] = matchups_df.iat[i,j] / np.diagonal(freq_df)[j]
