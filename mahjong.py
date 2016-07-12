@@ -75,7 +75,7 @@ def create_pairings_df(player_list):
     return pairings_df
 
 # Populate matchups table using frequency of play
-def get_freq_mmr(pairings_df, input_data):
+def generate_freq_mmr(pairings_df, input_data):
     # Grab today's players and initialize output df
     player_list = pairings_df.columns
     matchups_df = pairings_df.copy()
@@ -99,7 +99,7 @@ def get_freq_mmr(pairings_df, input_data):
     return matchups_df  
 
 # Populate matchups table based on scoring history
-def get_score_mmr(pairings_df, input_data):
+def generate_score_mmr(pairings_df, input_data):
     player_list = pairings_df.columns
     games_rows = get_player_data(input_data, player_list)
     matchups_df = pairings_df.copy()
@@ -124,7 +124,7 @@ def get_score_mmr(pairings_df, input_data):
                 else:
                     matchups_df.at[gameid_players[i],gameid_players[j]] += gameid_scores[i] # Add score of i to matchup sum
     
-    freq_df = get_freq_mmr(pairings_df, input_data)
+    freq_df = generate_freq_mmr(pairings_df, input_data)
     for i in range( len(player_list)):
         for j in range( len(player_list)):
             matchups_df.iat[i,j] = matchups_df.iat[i,j] / np.diagonal(freq_df)[j]
@@ -133,7 +133,7 @@ def get_score_mmr(pairings_df, input_data):
     return matchups_df
 
 # Matchmaking method: Generate tables via swapping individuals (n^2.5 iterations) - swaps within same tables sometimes
-def match_by_rating(table_counts, matchups_df):
+def match_by_mmr(table_counts, matchups_df):
     player_list = list(matchups_df.columns) # Make a list of today's players
     split_tables = get_split_tables(table_counts, player_list)
     best_tables = split_tables
@@ -144,7 +144,7 @@ def match_by_rating(table_counts, matchups_df):
         improved = 0
         total_score = 0
         for table in split_tables:
-            total_score += sum_ratings(table, matchups_df)
+            total_score += sum_table_mmr(table, matchups_df)
 
         if (i == 0):
             min_score = total_score
@@ -218,7 +218,7 @@ def playerstats(input_data, player_list):
     return results
 
 # Calculate a matchmaking score for a given table of players
-def sum_ratings(table_players, matchups_df):
+def sum_table_mmr(table_players, matchups_df):
     table_sum = 0
     for i in table_players:
         for j in table_players:
