@@ -4,9 +4,9 @@ from pandas import Series, DataFrame
 import random
 
 # Reduce input_data to only the rows relevant to today's players
-def get_player_data(input_data, players_list):
+def get_player_data(input_data, player_list):
     games_rows = pd.DataFrame()
-    for i in players_list:
+    for i in player_list:
         games_rows = games_rows.append(input_data.loc[(input_data['PlayerId'] == i)])
     return games_rows
 
@@ -17,7 +17,7 @@ def get_playerid_games(input_data, PlayerId):
     return listofgames
 
 # Returns players split into groups based on table_counts
-def get_split_tables(table_counts, players_list):
+def get_split_tables(table_counts, player_list):
     tables_4p_made = 0
     tables_5p_made = 0
     split_tables = []
@@ -26,7 +26,7 @@ def get_split_tables(table_counts, players_list):
     
     if table_counts[1] > 0:
         for i in range(table_counts[1]):
-            split_tables.append( players_list[start:end] )
+            split_tables.append( player_list[start:end] )
             tables_4p_made += 1
             start += 4
             end += 4
@@ -35,7 +35,7 @@ def get_split_tables(table_counts, players_list):
     
     if table_counts[2] > 0:
         for i in range(table_counts[2]):
-            split_tables.append( players_list[start:end])
+            split_tables.append( player_list[start:end])
             tables_5p_made += 1
             start += 5
             end += 5
@@ -43,23 +43,23 @@ def get_split_tables(table_counts, players_list):
     return split_tables
 
 # Determine amount of 5 person tables
-def get_table_counts(players_list):
-    if len(players_list) < 8:
+def get_table_counts(player_list):
+    if len(player_list) < 8:
         total_tables = 1
-        if len(players_list) == 4:
+        if len(player_list) == 4:
             tables_4p = 1
             tables_5p = 0
-        elif len(players_list) == 5:
+        elif len(player_list) == 5:
             tables_4p = 0
             tables_5p = 1
         else:
             tables_4p = tables_5p = 0
-    elif len(players_list) == 11:
+    elif len(player_list) == 11:
         total_tables = 2
         tables_4p = tables_5p = 0
     else:
-        tables_5p = len(players_list) % 4
-        total_tables = int( len(players_list) / 4)
+        tables_5p = len(player_list) % 4
+        total_tables = int( len(player_list) / 4)
         tables_4p = total_tables - tables_5p
     
     table_counts = [total_tables, tables_4p, tables_5p]
@@ -67,21 +67,20 @@ def get_table_counts(players_list):
     return table_counts
 
 # Create a zeros DataFrame of (#players,#players) size for matchups, with ordered indices.
-def create_pairings_table(players_list):
-    num_players = len(players_list)
+def create_pairings_df(player_list):
+    num_players = len(player_list)
     pairings_df = DataFrame(np.zeros(num_players**2).reshape(num_players,num_players))
-    pairings_df.index = sorted(players_list)
-    pairings_df.columns = sorted(players_list)
+    pairings_df.index = sorted(player_list)
+    pairings_df.columns = sorted(player_list)
     return pairings_df
 
 # Populate matchups table using frequency of play
-def create_freq_matchups(pairings_df, input_data):
     # Grab today's players and initialize output df
-    players_list = pairings_df.columns
+    player_list = pairings_df.columns
     matchups_df = pairings_df.copy()
         
     # Pull all rows from input_data relevant to today's players
-    games_rows = get_player_data(input_data, players_list)
+    games_rows = get_player_data(input_data, player_list)
     
     # Make a list of unique games
     uniquegames = games_rows['GameId'].unique()
@@ -99,9 +98,8 @@ def create_freq_matchups(pairings_df, input_data):
     return matchups_df  
 
 # Populate matchups table based on scoring history
-def create_score_matchups(pairings_df, input_data):
-    players_list = pairings_df.columns
-    games_rows = get_player_data(input_data, players_list)
+    player_list = pairings_df.columns
+    games_rows = get_player_data(input_data, player_list)
     matchups_df = pairings_df.copy()
     
     for gameid in games_rows['GameId'].unique():
@@ -124,9 +122,8 @@ def create_score_matchups(pairings_df, input_data):
                 else:
                     matchups_df.at[gameid_players[i],gameid_players[j]] += gameid_scores[i] # Add score of i to matchup sum
     
-    freq_df = create_freq_matchups(pairings_df, input_data)
-    for i in range( len(players_list)):
-        for j in range( len(players_list)):
+    for i in range( len(player_list)):
+        for j in range( len(player_list)):
             matchups_df.iat[i,j] = matchups_df.iat[i,j] / np.diagonal(freq_df)[j]
     
     # Diagonal values are player's average score            
@@ -134,11 +131,11 @@ def create_score_matchups(pairings_df, input_data):
 
 # Matchmaking method: Generate tables via swapping individuals (n^2.5 iterations) - swaps within same tables sometimes
 def match_by_rating(table_counts, matchups_df):
-    players_list = list(matchups_df.columns) # Make a list of today's players
-    split_tables = get_split_tables(table_counts, players_list)
+    player_list = list(matchups_df.columns) # Make a list of today's players
+    split_tables = get_split_tables(table_counts, player_list)
     best_tables = split_tables
     
-    for i in range(int(len(players_list)**2.5)):
+    for i in range(int(len(player_list)**2.5)):
         
         # Calculate total table score
         improved = 0
@@ -171,12 +168,12 @@ def match_by_rating(table_counts, matchups_df):
         
     return best_tables
 
-# Returns aggregate data of players in players_list from input_data
-def playerstats(input_data, players_list):
+# Returns aggregate data of players in player_list from input_data
+def playerstats(input_data, player_list):
     fields = ['Total games played', '4p games played', '5p games played', 'Mean score', 'Stdev score',
               'Mean rank', 'Stdev rank', 'Mean 4p rank', 'Stdev 4p rank', 'Mean 5p rank', 'Stdev 5p rank']
-    players_list.sort()
-    results = DataFrame(index=fields, columns=players_list)
+    player_list.sort()
+    results = DataFrame(index=fields, columns=player_list)
         
     # Make groupby objects of input data to take advantage of aggregate functions
     grouped_by_gameid = input_data.groupby('GameId')
@@ -186,7 +183,7 @@ def playerstats(input_data, players_list):
     grouped_by_gameid.size()
 
     # Populate the results dataframe player by player
-    for player in players_list:
+    for player in player_list:
 
         # Pull games for player from groupby object
         curr_player_data = grouped_by_playerid.get_group(player)
