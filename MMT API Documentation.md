@@ -61,6 +61,17 @@ Whenever a function requires a list of players, use **`PlayerId`** values from t
 Note that order **does not** matter.
 
 ##2. Function Overview
+[`create_pairings_df(player_list)`](#create_pairings_df%28player_list%29)
+
+* Initializes a [DataFrame](http://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.html) with a number of rows and columns equal to the number of players in the provided list. Each axis is labeled with the sorted contents of the provided list, and all cell values are set to zero.
+
+[`generate_freq_mmr(pairings_df, input_data)`](#generate_freq_mmr%28pairings_df,-input_data%29)
+
+* Generates and assigns a matchmaking rating (MMR) value to each cell of a provided [DataFrame](http://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.html). This MMR is based on the total number of times players of corresponding indices have played against each other. Use `create_pairings_df` for initializing the input [DataFrame](http://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.html).
+
+[`generate_score_mmr(pairings_df, input_data)`](#generate_score_mmr%28pairings_df,-input_data%29)
+
+* Generates and assigns a matchmaking rating (MMR) value to each cell of a provided [DataFrame](http://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.html). This MMR is based on the average score of the player of the corresponding row when having played against the player of the corresponding column. Use `create_pairings_df` for initializing the input [DataFrame](http://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.html).
 
 [`get_player_data(input_data, player_list)`](#get_player_data%28input_data,-player_list%29)
 
@@ -78,19 +89,7 @@ Note that order **does not** matter.
 
 * Determines the number of 4 and 5 player tables required to seat all players in the provided list of players.
 
-[`create_pairings_df(player_list)`](#create_pairings_df%28player_list%29)
-
-* Initializes a [DataFrame](http://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.html) with a number of rows and columns equal to the number of players in the provided list. Each axis is labeled with the sorted contents of the provided list, and all cell values are set to zero.
-
-[`get_freq_mmr(pairings_df, input_data)`](#get_freq_mmr%28pairings_df,-input_data%29)
-
-* Modifies the contents of a [DataFrame](http://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.html) using the total number of times players of corresponding indices have played against each other. Each cell is increased by the number of games played between the corresponding players. When called with an empty [DataFrame](http://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.html), cell values can be used as matchmaking ratings.
-
-[`get_score_mmr(pairings_df, input_data)`](#get_score_mmr%28pairings_df,-input_data%29)
-
-* Modifies the contents of a [DataFrame](http://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.html) using the calculated average score of the player of the corresponding row when having played against the player of the corresponding column. When called with an empty [DataFrame](http://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.html), cell values can be used as matchmaking ratings.
-
-[`match_by_rating(table_counts, matchups_df)`](#match_by_rating%28table_counts,-matchups_df%29)
+[`match_by_mmr(table_counts, matchups_df)`](#match_by_mmr%28table_counts,-matchups_df%29)
 
 * Generates groupings of individuals based on matchmaking ratings provided in a [DataFrame](http://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.html). Group sizes are determined by the required number of 4 and 5 player tables to seat all players.
 
@@ -98,7 +97,7 @@ Note that order **does not** matter.
 
 * Generates a [DataFrame](http://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.html) containing aggregate data for each player in the provided list based on their historical game data.
 
-[`sum_ratings(table_players, matchups_df)`](#sum_ratings%28table_players,-matchups_df%29)
+[`sum_table_mmr(table_players, matchups_df)`](#sum_table_mmr%28table_players,-matchups_df%29)
 
 * Calculates a matchmaking score based on the sum of matchmaking rating for a given table of players. Matchmaking scores identical in value indicate a perfect match.
 
@@ -107,6 +106,57 @@ Note that order **does not** matter.
 * Returns **`entrylist`** with two random elements swapped.
 
 ##3. Function Details
+###`create_pairings_df(player_list)`
+Initializes a [DataFrame](http://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.html) with a number of rows and columns equal to the number of players in the provided list. Each axis is labeled with the sorted contents of the provided list, and all cell values are set to zero.
+
+#####Parameters:
+>`player_list`: *list*
+* All `PlayerId` values to be used as row and column labels. All values must be integers, strings, or tuples, and of the same datatype. (e.g. [1,2,3], ['Ted','Joe','Emma']).
+
+#####Returns:
+>datatype: *DataFrame*
+* Result will be a square DataFrame having all values set to zero. Row and column labels will be symmetric across the diagonal.
+
+#####Example:
+```Python
+>>> friends = ['Ted','Joe','Mary']
+>>> df = create_pairings_df(friends)
+>>> print df
+```
+ | Ted | Joe | Mary
+-- | -- | -- | --
+**Ted** | 0 | 0 | 0
+**Joe** | 0 | 0 | 0
+**Mary** | 0 | 0 | 0
+
+###`generate_freq_mmr(pairings_df, input_data)`
+Modifies the contents of a [DataFrame](http://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.html) using the total number of times players of corresponding indices have played against each other. Each cell is increased by the number of games played between the corresponding players. When called with an empty [DataFrame](http://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.html), cell values can be used as matchmaking ratings.
+
+#####Parameters:
+>`pairings_df`: *DataFrame*
+* Contains all players to be paired as both row and column labels in a square DataFrame. All values in the DataFrame must be zero to return a DataFrame with the correct sums.
+
+>`input_data`: *DataFrame*
+* All historical game data to be used as a basis for frequency calculation. Must contain the headers `GameId` and `PlayerId`. For each of these headers, the respective values should contain only a single datatype and be uniquely identifiable.
+
+#####Returns:
+>datatype: *DataFrame*
+* Column and row indices will be sorted in ascending order. Values on the diagonal are equal to the number of games played by the player with that row and column label. Values are symmetric across the diagonal.
+
+###`generate_score_mmr(pairings_df, input_data)`
+Modifies the contents of a [DataFrame](http://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.html) using the calculated average score of the player of the corresponding row when having played against the player of the corresponding column. When called with an empty [DataFrame](http://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.html), cell values can be used as matchmaking ratings.
+
+#####Parameters:
+>`pairings_df`: *DataFrame*
+* Contains all players to be paired as both row and column labels in a square DataFrame. All values in the DataFrame must be zero to return a DataFrame with the correct sums.
+
+>`input_data`: *DataFrame*
+* All historical game data to be used as a basis for frequency calculation. Must contain the headers `GameId` and `PlayerId`. For each of these headers, the respective values should contain only a single datatype and be uniquely identifiable.
+
+#####Returns:
+>datatype: *DataFrame*
+* Column and row indices will be sorted in ascending order. Values on the diagonal are equal to the average score of the player with that row and column label. Values will **not** be symmetric across the diagonal. All values in the DataFrame are the average score of the player of the corresponding row when having played against the player of the corresponding column.
+
 ###`get_player_data(input_data, player_list)`
 Reduces input data to contain only games including players in the provided list.
 
@@ -170,64 +220,12 @@ Determines the number of 4 and 5 player tables required to seat all players in t
 
 #####Example:
 ```Python
->>> >>> people = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]
+>>> people = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]
 >>> get_table_counts(people)
 [3, 2, 1]
 ```
 
-###`create_pairings_df(player_list)`
-Initializes a [DataFrame](http://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.html) with a number of rows and columns equal to the number of players in the provided list. Each axis is labeled with the sorted contents of the provided list, and all cell values are set to zero.
-
-#####Parameters:
->`player_list`: *list*
-* All `PlayerId` values to be used as row and column labels. All values must be integers, strings, or tuples, and of the same datatype. (e.g. [1,2,3], ['Ted','Joe','Emma']).
-
-#####Returns:
->datatype: *DataFrame*
-* Result will be a square DataFrame having all values set to zero. Row and column labels will be symmetric across the diagonal.
-
-#####Example:
-```Python
->>> friends = ['Ted','Joe','Mary']
->>> df = create_pairings_df(friends)
->>> print df
-```
- | Ted | Joe | Mary
--- | -- | -- | --
-**Ted** | 0 | 0 | 0
-**Joe** | 0 | 0 | 0
-**Mary** | 0 | 0 | 0
-
-
-###`get_freq_mmr(pairings_df, input_data)`
-Modifies the contents of a [DataFrame](http://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.html) using the total number of times players of corresponding indices have played against each other. Each cell is increased by the number of games played between the corresponding players. When called with an empty [DataFrame](http://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.html), cell values can be used as matchmaking ratings.
-
-#####Parameters:
->`pairings_df`: *DataFrame*
-* Contains all players to be paired as both row and column labels in a square DataFrame. All values in the DataFrame must be zero to return a DataFrame with the correct sums.
-
->`input_data`: *DataFrame*
-* All historical game data to be used as a basis for frequency calculation. Must contain the headers `GameId` and `PlayerId`. For each of these headers, the respective values should contain only a single datatype and be uniquely identifiable.
-
-#####Returns:
->datatype: *DataFrame*
-* Column and row indices will be sorted in ascending order. Values on the diagonal are equal to the number of games played by the player with that row and column label. Values are symmetric across the diagonal.
-
-###`get_score_mmr(pairings_df, input_data)`
-Modifies the contents of a [DataFrame](http://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.html) using the calculated average score of the player of the corresponding row when having played against the player of the corresponding column. When called with an empty [DataFrame](http://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.html), cell values can be used as matchmaking ratings.
-
-#####Parameters:
->`pairings_df`: *DataFrame*
-* Contains all players to be paired as both row and column labels in a square DataFrame. All values in the DataFrame must be zero to return a DataFrame with the correct sums.
-
->`input_data`: *DataFrame*
-* All historical game data to be used as a basis for frequency calculation. Must contain the headers `GameId` and `PlayerId`. For each of these headers, the respective values should contain only a single datatype and be uniquely identifiable.
-
-#####Returns:
->datatype: *DataFrame*
-* Column and row indices will be sorted in ascending order. Values on the diagonal are equal to the average score of the player with that row and column label. Values will **not** be symmetric across the diagonal. All values in the DataFrame are the average score of the player of the corresponding row when having played against the player of the corresponding column.
-
-###`match_by_rating(table_counts, matchups_df)`
+###`match_by_mmr(table_counts, matchups_df)`
 Generates groupings of individuals based on matchmaking ratings provided in a [DataFrame](http://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.html). Group sizes are determined by the required number of 4 and 5 player tables to seat all players.
 
 #####Parameters:
@@ -263,7 +261,7 @@ Generates a [DataFrame](http://pandas.pydata.org/pandas-docs/stable/generated/pa
  * Table 2: [`PlayerId = 6, PlayerId = 10, PlayerId = 41, PlayerId = 72, PlayerId = 79`].
 
 
-###`sum_ratings(table_players, matchups_df)`
+###`sum_table_mmr(table_players, matchups_df)`
 Calculates a matchmaking score based on the sum of matchmaking rating for a given table of players. Matchmaking scores identical in value indicate a perfect match.
 
 #####Parameters:
