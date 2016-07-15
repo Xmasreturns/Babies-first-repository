@@ -17,11 +17,11 @@ Sample techniques are included for creating matchmaking ratings based on play fr
 * Predict the score of each player at a table based on past performance against each other player
 
 ## Navigation
-* [1. Data Inputs](#1.-data-inputs)
-	* [1.1 Game Data](#1.1-game-data)
-	* [1.2 Player Lists](#1.2-player-lists)
-* [2. Function Overview](#2.-function-overview)
-* [3. Function Details](#3.-function-details)
+* [1. Data Inputs](#1-data-inputs)
+	* [1.1 Game Data](#11-game-data)
+	* [1.2 Player Lists](#12-player-lists)
+* [2. Function Overview](#2-function-overview)
+* [3. Function Details](#3-function-details)
 
 ##1. Data Inputs
 ####1.1 Game Data
@@ -124,7 +124,7 @@ Initializes a [DataFrame](http://pandas.pydata.org/pandas-docs/stable/generated/
 >>> print df
 ```
  | Ted | Joe | Mary
--- | -- | -- | --
+--- | --- | --- | ---
 **Ted** | 0 | 0 | 0
 **Joe** | 0 | 0 | 0
 **Mary** | 0 | 0 | 0
