@@ -61,47 +61,47 @@ Whenever a function requires a list of players, use **`PlayerId`** values from t
 Note that order **does not** matter.
 
 ##2. Function Overview
-[`create_pairings_df(player_list)`](#create_pairings_df%28player_list%29)
+[`create_pairings_df(player_list)`](#create_pairings_dfplayer_list)
 
 * Initializes a [DataFrame](http://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.html) with a number of rows and columns equal to the number of players in the provided list. Each axis is labeled with the sorted contents of the provided list, and all cell values are set to zero.
 
-[`generate_freq_mmr(pairings_df, input_data)`](#generate_freq_mmr%28pairings_df,-input_data%29)
+[`generate_freq_mmr(pairings_df, input_data)`](#generate_freq_mmrpairings_df-input_data)
 
 * Generates and assigns a matchmaking rating (MMR) value to each cell of a provided [DataFrame](http://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.html). This MMR is based on the total number of times players of corresponding indices have played against each other. Use `create_pairings_df` for initializing the input [DataFrame](http://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.html).
 
-[`generate_score_mmr(pairings_df, input_data)`](#generate_score_mmr%28pairings_df,-input_data%29)
+[`generate_score_mmr(pairings_df, input_data)`](#generate_score_mmrpairings_df-input_data)
 
 * Generates and assigns a matchmaking rating (MMR) value to each cell of a provided [DataFrame](http://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.html). This MMR is based on the average score of the player of the corresponding row when having played against the player of the corresponding column. Use `create_pairings_df` for initializing the input [DataFrame](http://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.html).
 
-[`get_player_data(input_data, player_list)`](#get_player_data%28input_data,-player_list%29)
+[`get_player_data(input_data, player_list)`](#get_player_datainput_data-player_list)
 
 * Reduces input data to contain only games including players in the provided list.
 
-[`get_playerid_games(input_data, PlayerId)`](#get_playerid_games%input_data,-PlayerId%29)
+[`get_playerid_games(input_data, PlayerId)`](#get_playerid_gamesinput_data-playerid)
 
 * Reduces input data to contain only games including the provided **`PlayerID`**.
 
-[`get_split_tables(table_counts, player_list)`](#get_split_tables%28table_counts,-player_list%29)
+[`get_split_tables(table_counts, player_list)`](#get_split_tablestable_counts-player_list)
 
 * Splits the provided list of players into smaller lists, based on the required number of 4 and 5 player tables to seat all players.
 
-[`get_table_counts(player_list)`](#get_table_counts%28player_list%29)
+[`get_table_counts(player_list)`](#get_table_countsplayer_list)
 
 * Determines the number of 4 and 5 player tables required to seat all players in the provided list of players.
 
-[`match_by_mmr(table_counts, matchups_df)`](#match_by_mmr%28table_counts,-matchups_df%29)
+[`match_by_mmr(table_counts, matchups_df)`](#match_by_mmrtable_counts-matchups_df)
 
 * Generates groupings of individuals based on matchmaking ratings provided in a [DataFrame](http://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.html). Group sizes are determined by the required number of 4 and 5 player tables to seat all players.
 
-[`playerstats(input_data, player_list)`](#playerstats%28input_data,-player_list%29)
+[`playerstats(input_data, player_list)`](#playerstatsinput_data-player_list)
 
 * Generates a [DataFrame](http://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.html) containing aggregate data for each player in the provided list based on their historical game data.
 
-[`sum_table_mmr(table_players, matchups_df)`](#sum_table_mmr%28table_players,-matchups_df%29)
+[`sum_table_mmr(table_players, matchups_df)`](#sum_table_mmrtable_players-matchups_df)
 
 * Calculates a matchmaking score based on the sum of matchmaking rating for a given table of players. Matchmaking scores identical in value indicate a perfect match.
 
-[`swap_two(entrylist)`](#swap_two%28entrylist%29)
+[`swap_two(entrylist)`](#swap_twoentrylist)
 
 * Returns **`entrylist`** with two random elements swapped.
 
