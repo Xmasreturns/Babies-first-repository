@@ -1,4 +1,4 @@
-#Mahjong Matchmaking Toolkit
+# Mahjong Matchmaking Toolkit
 
 **The following release versions are used:**
 * [Python 3.4.4](https://www.python.org/downloads/releases/3.4.4/)
@@ -248,7 +248,7 @@ Generates a [DataFrame](http://pandas.pydata.org/pandas-docs/stable/generated/pa
 
 ##### Parameters:
 >`input_data`: *DataFrame*
-* All historical game data for which to generate aggregate data. Must contain the headers `GameId`, `PlayerId`, `Rank`, and `Score`. For each of these headers, the respective values should follow the [data input requirements](#1.-Data-Inputs).
+* All historical game data for which to generate aggregate data. Must contain the headers `GameId`, `PlayerId`, `Rank`, and `Score`. For each of these headers, the respective values should follow the [data input requirements](#1.Data-Inputs).
 
 >`player_list`: *list*
 * `PlayerId` values in `input_data` for which to generate aggregate data. All values must be integers, strings, or tuples, and of the same datatype. (e.g. [1,2,3], ['Ted','Joe','Emma']).
