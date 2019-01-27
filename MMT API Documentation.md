@@ -123,7 +123,7 @@ Initializes a [DataFrame](http://pandas.pydata.org/pandas-docs/stable/generated/
 >>> df = create_pairings_df(friends)
 >>> print df
 ```
- | Ted | Joe | Mary
+ <span></span> | Ted | Joe | Mary
 --- | --- | --- | ---
 **Ted** | 0 | 0 | 0
 **Joe** | 0 | 0 | 0
